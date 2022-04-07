@@ -49,12 +49,17 @@ app.get("/api/v1/developers/:id", (req, res, next) => {
 
 // Add newbie
 app.post("/api/v1/developers/", (req, res, next) => {
-  const { name } = req.body;
+  const dev = req.body;
 
-  if (!name)
+  if (!dev.name)
     res
       .status(500)
       .json({ status: "Failed", message: "Failed to insert dev info" });
+
+  developersData.push(dev);
+  res
+    .status(200)
+    .json({ status: "Success", message: `Developer ${dev.name} to the group` });
 });
 
 // Delete developer
@@ -66,12 +71,28 @@ app.delete("/api/v1/developers/:id", (req, res, next) => {
       .json({ status: "Fail", message: "Failed to delete developer" });
 
   console.log(`Dev on delete ${developer[0].name}`);
-  // SPlice deletes the selected developer
+  // Splice deletes the selected developer
   developersData.splice(developersData.indexOf(developer.id, 0));
   res.status(200).json({
     message: "Developer successfully deleted",
   });
 });
+
+// Update developer info
+// app.patch("/api/v1/developers/:id", (req, res, next) => {
+//   // Get developer by Id
+//   const developer = developersData.filter((el) => el.id == req.params.id);
+//   console.log(`Developer with ${developer[0].name} name found`);
+
+//   console.log(`Dev index ${developersData.indexOf(developer)}`);
+//   const devIndex = developersData.indexOf(developer);
+//   const dev = req.body;
+//   console.log(developersData[devIndex]);
+//   res.status(200).json({
+//     status: "SUCCESS",
+//     message: "Updated successfully",
+//   });
+// });
 
 // Server instance
 const server = http.createServer(app);
